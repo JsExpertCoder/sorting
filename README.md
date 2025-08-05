@@ -1,2 +1,2 @@
 # Sorting
-Random study about sorting algorithms
+Random study about sorting algorithms and data structures
