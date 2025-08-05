@@ -205,19 +205,23 @@ void	merge(int array[], size_t start, size_t middle, size_t end)
 	size_t	i;
 	size_t	j;
 	size_t	k;
+	size_t	l_a_len;
+	size_t	r_a_len;
 	int		*left_array;
 	int		*right_array;
 
 	i = 0;
-	left_array = malloc((middle - start + 1) * sizeof(int));
-	right_array = malloc((end - middle) * sizeof(int));
-	while (i < middle - start + 1)
+	r_a_len = end - middle;
+	l_a_len = middle - start + 1;
+	left_array = malloc(l_a_len * sizeof(int));
+	right_array = malloc(r_a_len * sizeof(int));
+	while (i < l_a_len)
 	{
 		left_array[i] = array[start + i];
 		i++;
 	}
 	j = 0;
-	while (j < end - middle)
+	while (j < r_a_len)
 	{
 		right_array[j] = array[middle + 1 + j];
 		j++;
@@ -225,7 +229,7 @@ void	merge(int array[], size_t start, size_t middle, size_t end)
 	i = 0;
 	j = 0;
 	k = start;
-	while (i < middle - start + 1 && j < end - middle)
+	while (i < l_a_len && j < r_a_len)
 	{
 		if (left_array[i] <= right_array[j])
 		{
@@ -239,13 +243,13 @@ void	merge(int array[], size_t start, size_t middle, size_t end)
 		}
 		k++;
 	}
-	while (i < middle - start + 1)
+	while (i < l_a_len)
 	{
 		array[k] = left_array[i];
 		k++;
 		i++;
 	}
-	while (j < end - middle)
+	while (j < r_a_len)
 	{
 		array[k] = right_array[j];
 		k++;
