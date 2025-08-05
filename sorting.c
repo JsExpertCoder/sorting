@@ -200,7 +200,7 @@ void 	insertion_sort(int v[], size_t n)
 // 	merge2(array,left_array, right_array);
 // }
 
-void	merge(int array[], size_t start, size_t middle, size_t end)
+void	merge(int array[], size_t start, size_t middle, size_t end, size_t *cmp, size_t *swp)
 {
 	size_t	i;
 	size_t	j;
@@ -233,41 +233,43 @@ void	merge(int array[], size_t start, size_t middle, size_t end)
 	{
 		if (left_array[i] <= right_array[j])
 		{
+			(*cmp)++;
 			array[k] = left_array[i];
+			(*swp)++;
 			i++;
 		}
 		else
 		{
+			(*cmp)++;
 			array[k] = right_array[j];
+			(*swp)++;
 			j++;
 		}
 		k++;
 	}
 	while (i < l_a_len)
 	{
-		array[k] = left_array[i];
-		k++;
-		i++;
+		array[k++] = left_array[i++];
+		(*swp)++;
 	}
 	while (j < r_a_len)
 	{
-		array[k] = right_array[j];
-		k++;
-		j++;
+		array[k++] = right_array[j++];
+		(*swp)++;
 	}
 	free(right_array);
 	free(left_array);
 }
 
-void	merge_sort(int array[], size_t start, size_t end)
+void	merge_sort(int array[], size_t start, size_t end, size_t *cmp, size_t *swp)
 {
 	int	middle;
 	if (start == end)
 		return ;
 	middle = start + (end - start) / 2;
-	merge_sort(array, start, middle);
-	merge_sort(array, middle + 1, end);
-	merge(array, start, middle, end);
+	merge_sort(array, start, middle, cmp, swp);
+	merge_sort(array, middle + 1, end, cmp, swp);
+	merge(array, start, middle, end, cmp, swp);
 }
 
 int main ()
@@ -276,14 +278,16 @@ int main ()
 		43, 42, 41, 40, 39, 36, 35, 29, 21, 20, 19, 18, 17, 16, 15, 28, 27, 26, 25,
 		 24, 23, 22, 14, 13, 12, 11, 10, 9, 8};
 
+	size_t cmp = 0;
+	size_t swp = 0;
 	size_t n = sizeof(v) / sizeof(v[0]);
 
 	print_complexity("N/D", v, n, 0, 0);
 	bubble_sort(v, n);
 	selection_sort(v, n);
 	insertion_sort(v, n);
-	merge_sort(v, 0, n - 1);
-	print_complexity("merge_sort", v, n, 0, 0);
+	merge_sort(v, 0, n - 1, &cmp, &swp);
+	print_complexity("merge_sort", v, n, cmp, swp);
 	return (0);
 }
 
