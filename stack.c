@@ -6,7 +6,7 @@
 /*   By: fnicolau <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 13:41:58 by fnicolau          #+#    #+#             */
-/*   Updated: 2025/08/07 20:13:10 by fnicolau         ###   ########.fr       */
+/*   Updated: 2025/08/08 12:37:17 by fnicolau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,17 +87,6 @@ void	free_stack(t_node **head)
 	}
 	*head = NULL;
 }
-// void	merge_stack(t_node **stack)
-// {
-// 	size_t	middle;
-
-// 	if (start == end)
-// 		return ;
-// 	middle = start + (end - start) / 2;
-// 	merge_stack(stack, start, middle);
-// 	merge_stack(stack, middle + 1, end);
-// 	merge(stack, start, middle, end);
-// }
 
 int	main(void)
 {
@@ -128,15 +117,5 @@ int	main(void)
 	printf("peek: %d\n", peek(head));
 	disp_stack(head, NULL);
 	free_stack(&head);
-
-	// sorting a stack
-	push(&head, 3);
-	push(&head, 5);
-	push(&head, 30);
-	push(&head, 77);
-
-	disp_stack(head, "(before sorting)");
-	// merge_stack(&head);
-	disp_stack(head, "(after sorting)");
 	return (0);
 }
