@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: fnicolau <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/08/07 13:41:58 by fnicolau          #+#    #+#             */
-/*   Updated: 2025/08/08 14:47:02 by fnicolau         ###   ########.fr       */
+/*   Created: 2025/08/09 11:43:42 by fnicolau          #+#    #+#             */
+/*   Updated: 2025/08/09 17:03:35 by fnicolau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,106 +66,88 @@ void	free_stack(t_node **head)
 	}
 	*head = NULL;
 }
-// Utility function to split a linked list into two halves
-void split_list(t_node *source, t_node **front, t_node **back) {
-    t_node *slow;
-    t_node *fast;
 
-    if (!source || !source->next) {
-        *front = source;
-        *back = NULL;
-        return;
-    }
-
-    slow = source;
-    fast = source->next;
-
-    // Move fast by 2 and slow by 1
-    while (fast) {
-        fast = fast->next;
-        if (fast) {
-            slow = slow->next;
-            fast = fast->next;
-        }
-    }
-
-    *front = source;
-    *back = slow->next;
-    slow->next = NULL; // split the list
-}
-
-// Merge two sorted lists
-t_node *sorted_merge(t_node *a, t_node *b) {
-    t_node *result = NULL;
-
-    if (!a) return b;
-    if (!b) return a;
-
-    if (a->data <= b->data) {
-        result = a;
-        result->next = sorted_merge(a->next, b);
-    } else {
-        result = b;
-        result->next = sorted_merge(a, b->next);
-    }
-    return result;
-}
-
-// Merge sort for linked list
-void merge_sort(t_node **head_ref) {
-    t_node *a;
-    t_node *b;
-    t_node *head;
-
-    if (!head_ref) return;
-	head = *head_ref;
-	if (!head || !head->next) return ;
-
-    // 1. Split
-    split_list(head, &a, &b);
-
-    // 2. Sort each half
-    merge_sort(&a);
-    merge_sort(&b);
-
-    // 3. Merge
-    *head_ref = sorted_merge(a, b);
-}
-
-int	main(void)
+t_node	*merge_lists(t_node *l1, t_node *l2)
 {
 	t_node	*head;
 
+	if (!l1)
+		return (l2);
+	if (!l2)
+		return (l1);
+	if (l1->data <= l2->data)
+	{
+		head = l1;
+		head->next = merge_lists(l1->next, l2);
+	}
+	else
+	{
+		head = l2;
+		head->next = merge_lists(l1, l2->next);
+	}
+	return (head);
+}
+
+t_node	*get_middle(t_node *head)
+{
+	t_node	*slow;
+	t_node	*fast;
+
+	if (!head)
+		return (head);
+	slow = head;
+	fast = head->next;
+	while (fast)
+	{
+		fast = fast->next;
+		if (fast)
+		{
+			slow = slow->next;
+			fast = fast->next;
+		}
+	}
+	return (slow);
+}
+
+void	merge_sort(t_node **head_ref)
+{
+	t_node	*l1;
+	t_node	*l2;
+	t_node	*head;
+	t_node	*middle;
+
+	if (!head_ref || !*head_ref || !(*head_ref)->next)
+		return ;
+	head = *head_ref;
+	middle = get_middle(head);
+	l1 = head;
+	l2 = middle->next;
+	middle->next = NULL;
+	merge_sort(&l1);
+	merge_sort(&l2);
+	*head_ref = merge_lists(l1, l2);
+}
+
+int	main(int ac, char **av)
+{
+	t_node	*head;
+
+	++av;
+	(void)ac;
 	head = NULL;
-	// testing basic operations within a stack
-	// push(NULL, 2);
-	// disp_stack(head, NULL);
-	// push(&head, 3);
-	// disp_stack(head, NULL);
-	// push(&head, 5);
-	// disp_stack(head, NULL);
-	// disp_stack(head, NULL);
-	// disp_stack(head, NULL);
-	// push(&head, 30);
-	// disp_stack(head, NULL);
-	// disp_stack(head, NULL);
-	// push(&head, 77);
-	// disp_stack(head, NULL);
-	// disp_stack(head, NULL);
-	// disp_stack(head, NULL);
-	// disp_stack(head, NULL);
-	// free_stack(&head);
-
-	// sorting a stack
-	push(&head, 3);
-	push(&head, 5);
-	push(&head, 30);
-	push(&head, 77);
-
+	while (*av)
+	{
+		push(&head, atoi(*av));
+		av++;
+	}
 	disp_stack(head, "(before sorting)");
 	merge_sort(&head);
 	disp_stack(head, "(after sorting)");
 	free_stack(&head);
-
 	return (0);
 }
+/*
+
+ compc linked_list.c && r=($(seq -77 77 | shuf | tr '\n' ' ')) && valm $r
+
+*/
